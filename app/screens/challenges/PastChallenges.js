@@ -6,11 +6,11 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 
 import { DARK } from '@styles/colors'
-import images from '@styles/images'
 import Page from '@components/Page'
 import Text from '@components/Text'
 import Timeline from '@components/Timeline'
 import { STRINGS } from '@localization/Strings'
+import { statusImage, format } from './internals'
 
 const mapStateToProps = (state) => ({
   inProgress: state.challenges.in_progress,
@@ -31,6 +31,8 @@ const styles = StyleSheet.create({
     width: 65,
     height: 90,
     marginRight: 17,
+    borderBottomLeftRadius: 4,
+    borderTopLeftRadius: 4,
   },
   container: {
     flexDirection: 'row',
@@ -44,8 +46,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     backgroundColor: '#fff',
     shadowRadius: 2,
-    elevation: 1,
-    overflow: 'hidden',
+    elevation: 2,
   },
   innerContainer: {
     flex: 1,
@@ -73,10 +74,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  status: {
-    width: 10,
-    height: 10,
-  },
   scoreContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -92,9 +89,12 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     height: 4.5,
   },
+  status: {
+    width: 10,
+    height: 10,
+  },
 })
 
-const format = (num) => Number(num).toLocaleString()
 const navigatBack = ({ goBack, }) => () => goBack()
 
 class PastChallenges extends Component {
@@ -121,21 +121,6 @@ class PastChallenges extends Component {
     } finally {
       resetRequest()
     }
-  }
-
-  resultBadge({ won, type, rank, }) {
-    let imageSrc = won ? images.tick : images.cross
-
-    if (type === 'leaderboard' && rank === 1) {
-      imageSrc = images.star
-    }
-
-    return (
-      <Image
-        source={imageSrc}
-        style={styles.status}
-      />
-    )
   }
 
   renderPastChallenges(pastChallenges) {
@@ -172,7 +157,9 @@ class PastChallenges extends Component {
             <Text style={styles.challengeName}>{name}</Text>
             <Text style={[styles.date, { fontSize: 12.5, }]}>{date}</Text>
           </View>
-          {this.renderScore({ type, activity_score, activity_score_goal, participants, rank, won, })}
+          {this.renderScore({
+            type, activity_score, activity_score_goal, participants, rank, won,
+          })}
           {type === 'timer' && this.renderResultGraph({ activity_score, })}
         </View>
       </View>
@@ -182,14 +169,16 @@ class PastChallenges extends Component {
   renderResultGraph({ activity_score, }) {
     return (
       <View style={styles.resultGraph}>
-        <Text style={[styles.lineGraph, {
-          width: (activity_score > 100) ? '100%' : `${activity_score}%`}
-        ]} />
+        <Text style={[styles.lineGraph, { width: (activity_score > 100) ? '100%' : `${activity_score}%`, }
+        ]}
+        />
       </View>
     )
   }
 
-  renderScore({ type, activity_score, activity_score_goal, participants, rank, won, }) {
+  renderScore({
+    type, activity_score, activity_score_goal, participants, rank, won,
+  }) {
     return (
       <View style={styles.scoreContainer}>
         {(type === 'leaderboard')
@@ -207,7 +196,10 @@ class PastChallenges extends Component {
           )}
 
         <View style={[styles.statusImageContainer, won && { backgroundColor: '#06b0b3', }]}>
-          {this.resultBadge({ won, type, rank, })}
+          <Image
+            source={statusImage({ won, type, rank, })}
+            style={styles.status}
+          />
         </View>
       </View>
     )
@@ -217,7 +209,7 @@ class PastChallenges extends Component {
     const { inProgress, pastChallenges, } = this.props
 
     return (
-      <Page goBack={navigatBack(this.props.navigation)} leftIcon="left" title={STRINGS.PastChallengesTitle} style={{ paddingBottom: 15, }} titleStyle={{paddingTop: 15}} showUnderline>
+      <Page goBack={navigatBack(this.props.navigation)} leftIcon="left" title={STRINGS.PastChallengesTitle} style={{ paddingBottom: 15, }} titleStyle={{ paddingTop: 15, }} showUnderline>
         {
           (inProgress)
             ? <ActivityIndicator size="small" color={DARK} style={{ marginTop: 40, }} />

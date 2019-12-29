@@ -22,6 +22,7 @@ module.exports = {
   "rules": {
     "react/jsx-filename-extension": 0,
     "react/prop-types": 0,
+    "import/prefer-default-export": 0,
     "react/button-has-type": 0,
     "semi": ["error", "never"],
     "class-methods-use-this": 0,
