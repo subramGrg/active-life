@@ -7,7 +7,7 @@
 
 # Tools
 
-`Running the versions of react and react-native listed on template RN code were problematic on my machine. Hence i used the latest versions or React and React Native`
+`Versions of react and react-native listed on the RN template code were problematic on my machine. Hence i used the latest versions or React and React Native`
 
 * <b>React</b> - 16.9
 * <b>react-native</b> - 0.61.5
