@@ -1,9 +1,16 @@
 # Instructions
 
-- yarn (install dependencies)
-- yarn ios (ios build)
-- yarn android (android build)
-- yarn test (to run tests)
+### iOS build
+- yarn install
+- cd ios/ && pod install
+- yarn ios
+
+### android build
+- yarn install
+- yarn android
+
+### running test
+* yarn test
 
 # Tools
 
