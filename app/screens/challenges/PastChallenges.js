@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: 'row',
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: '#dedede',
     borderStyle: 'solid',
     borderRadius: 4,
@@ -47,6 +47,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     shadowRadius: 2,
     elevation: 2,
+  },
+  pageTitle: {
+    paddingTop: 15,
   },
   innerContainer: {
     flex: 1,
@@ -61,6 +64,7 @@ const styles = StyleSheet.create({
   },
   challengeName: {
     height: 22,
+    fontWeight: 'bold',
   },
   date: {
     fontSize: 12.5,
@@ -69,7 +73,7 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
     backgroundColor: '#a1a1a1',
-    borderRadius: 8,
+    borderRadius: 9,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
@@ -79,19 +83,36 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   resultGraph: {
-    flex: 1,
     marginTop: 8.5,
+    borderRadius: 2,
     overflow: 'hidden',
+    backgroundColor: '#f7f7f7',
+    height: 4.5,
   },
   lineGraph: {
     backgroundColor: '#06b0b3',
     borderRadius: 2,
     overflow: 'hidden',
     height: 4.5,
+    width: '100%',
   },
   status: {
     width: 10,
     height: 10,
+    tintColor: '#fff',
+  },
+  textStyle: {
+    fontSize: 12.5,
+  },
+  scoreTotal: {
+    fontSize: 12.5,
+    color: '#a1a1a1',
+  },
+  leaderboardWon: {
+    backgroundColor: '#06b0b3',
+  },
+  loader: {
+    marginTop: 40,
   },
 })
 
@@ -155,7 +176,7 @@ class PastChallenges extends Component {
         <View style={styles.innerContainer}>
           <View style={styles.challengeInfoContainer}>
             <Text style={styles.challengeName}>{name}</Text>
-            <Text style={[styles.date, { fontSize: 12.5, }]}>{date}</Text>
+            <Text style={[styles.date, styles.textStyle]}>{date}</Text>
           </View>
           {this.renderScore({
             type, activity_score, activity_score_goal, participants, rank, won,
@@ -169,9 +190,7 @@ class PastChallenges extends Component {
   renderResultGraph({ activity_score, }) {
     return (
       <View style={styles.resultGraph}>
-        <Text style={[styles.lineGraph, { width: (activity_score > 100) ? '100%' : `${activity_score}%`, }
-        ]}
-        />
+        <Text style={[styles.lineGraph, (activity_score < 100) && { width: `${activity_score}%`, }]} />
       </View>
     )
   }
@@ -184,18 +203,18 @@ class PastChallenges extends Component {
         {(type === 'leaderboard')
           ? (
             <Text>
-              <Text style={{ fontSize: 12.5, }}>#{format(rank)} / </Text>
-              <Text style={{ fontSize: 12.5, color: '#a1a1a1', }}>{format(participants)}</Text>
+              <Text style={styles.textStyle}>#{format(rank)} / </Text>
+              <Text style={styles.scoreTotal}>{format(participants)}</Text>
             </Text>
           )
           : (
             <Text>
-              <Text style={{ fontSize: 12.5, }}>{activity_score} / </Text>
-              <Text style={{ fontSize: 12.5, color: '#a1a1a1', }}>{activity_score_goal}</Text>
+              <Text style={styles.textStyle}>{activity_score} / </Text>
+              <Text style={styles.scoreTotal}>{activity_score_goal}</Text>
             </Text>
           )}
 
-        <View style={[styles.statusImageContainer, won && { backgroundColor: '#06b0b3', }]}>
+        <View style={[styles.statusImageContainer, won && styles.leaderboardWon]}>
           <Image
             source={statusImage({ won, type, rank, })}
             style={styles.status}
@@ -209,10 +228,10 @@ class PastChallenges extends Component {
     const { inProgress, pastChallenges, } = this.props
 
     return (
-      <Page goBack={navigatBack(this.props.navigation)} leftIcon="left" title={STRINGS.PastChallengesTitle} style={{ paddingBottom: 15, }} titleStyle={{ paddingTop: 15, }} showUnderline>
+      <Page goBack={navigatBack(this.props.navigation)} leftIcon="left" title={STRINGS.PastChallengesTitle} titleStyle={styles.pageTitle} showUnderline>
         {
           (inProgress)
-            ? <ActivityIndicator size="small" color={DARK} style={{ marginTop: 40, }} />
+            ? <ActivityIndicator size="small" color={DARK} style={styles.loader} />
             : this.renderPastChallenges(pastChallenges)
         }
       </Page>
