@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "react": "16.9.0",
-    "react-native": "0.61.5",
+    "react-native": "0.62.3",
     "react-native-iphone-x-helper": "^1.0.2",
     "react-native-localization": "^0.2.1",
     "react-native-tab-view": "^1.2.0",
